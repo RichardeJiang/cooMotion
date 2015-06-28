@@ -1,0 +1,182 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/windowBackground"
+    tools:context=".MainActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <!--
+    android:background="#0099cc"
+    <org.opencv.android.JavaCameraView
+        android:id="@+id/cam_view"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:keepScreenOn="true"
+        opencv:camera_id="front"
+        opencv:show_fps="true"
+        />
+        -->
+    <!--
+         This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows.
+    -->
+
+    <!--
+    this linear is for the original checkbox view
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="horizontal"
+        android:gravity="bottom">
+        -->
+
+    <LinearLayout
+        android:id="@+id/fullscreen_content_controls"
+        style="?buttonBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        tools:ignore="UselessParent" >
+
+        <!--
+        android:background="@color/bright_foreground_material_dark"
+        <CheckBox
+            android:id="@+id/checkboxShowROI"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            android:text="ROI" />
+            -->
+
+        <!--
+        android:layout_gravity="right|bottom"
+        -->
+
+        <Button
+            android:id="@+id/btnHelp"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/driver"
+            android:elevation="10dp"
+            android:text="Help"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+
+            android:id="@+id/textView1"
+            android:layout_height="40dp"
+            android:text=" "
+            android:layout_gravity="center_horizontal"
+            >
+
+        </TextView>
+
+        <Button
+            android:id="@+id/btnPeerSettings"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/driver"
+            android:elevation="10dp"
+            android:text="Find Peers"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+
+            android:id="@+id/textView2"
+            android:layout_height="40dp"
+            android:text=" "
+            android:layout_gravity="center_horizontal"
+            >
+
+        </TextView>
+
+        <Button
+            android:id="@+id/btnStartCapturing"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/driver"
+            android:elevation="10dp"
+            android:text="Start Capturing"
+            android:layout_gravity="center_horizontal"
+            />
+
+
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+
+            android:id="@+id/textView3"
+            android:layout_height="40dp"
+            android:text=" "
+            android:layout_gravity="center_horizontal"
+            >
+
+        </TextView>
+
+        <Button
+            android:id="@+id/btnStartWatch"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/driver"
+            android:elevation="10dp"
+            android:text="Start Watch"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:layout_centerInParent="true"
+            android:layout_width="100dp"
+
+            android:id="@+id/textView4"
+            android:layout_height="40dp"
+            android:text=" "
+            android:layout_gravity="center_horizontal"
+            >
+
+        </TextView>
+
+        <Button
+            android:id="@+id/btnStopWatch"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/driver"
+            android:elevation="10dp"
+            android:text="Stop Watch"
+            android:layout_gravity="center_horizontal"
+            />
+
+
+
+
+    </LinearLayout>
+
+
+
+    <!--
+    android:layout_gravity="left|bottom"
+    -->
+
+    <!--
+    </LinearLayout>
+    -->
+
+</FrameLayout>
