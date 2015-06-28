@@ -65,6 +65,15 @@ public class WearableMessageService extends IntentService {
     */
     @Override
     protected void onHandleIntent(Intent intent) {
+
+        Bundle message = intent.getExtras();
+        if(message == null) {
+            Log.d(TAG, "Command not received");
+        }
+        else {
+            commandType = (String) message.get(Utils.STORE_COMMAND);
+        }
+
         if(commandType.equals(Utils.START_MEASUREMENT)) {
             for (String node : getNodes()) {
                 sendMessage(node, Utils.START_MEASUREMENT);
