@@ -35,16 +35,42 @@ public class DataStorageService extends WearableListenerService {
     private static final String TAG = "DataStorageService";
 
     private GoogleApiClient mGoogleApiClient;
-    private SharedPreferences preferences;
+    //private SharedPreferences preferences;
+    private File directory;
+    private File file;
+    private FileOutputStream stream;
+    private OutputStreamWriter writer;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        preferences = getSharedPreferences(Utils.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+        //preferences = getSharedPreferences(Utils.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .build();
         mGoogleApiClient.connect();
+
+        //originally from the saveData method
+        directory = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS), "coMotion");
+        if (! directory.exists()){
+            if (! directory.mkdirs()){
+                Log.d(TAG, "failed to create directory");
+                return;
+            }
+        }
+        long timeStamp = System.currentTimeMillis();
+        file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp+".txt");
+
+        try {
+            stream = new FileOutputStream(file, true);
+            writer = new OutputStreamWriter(stream);
+
+        } catch (Exception e) {
+            Log.d(TAG, "Error In Creating The File Writer");
+            e.printStackTrace();
+        }
+
 
         //for testing purpose
         System.out.println("INSIDE THE DATA STORAGE PART!!!");
@@ -71,8 +97,9 @@ public class DataStorageService extends WearableListenerService {
             if (Utils.SENSOR_DATA_PATH.equals(path) && event.getType() == DataEvent.TYPE_CHANGED) {
                 byte[] rawData = event.getDataItem().getData();
                 DataMap sensorData = DataMap.fromByteArray(rawData);
-                sensorData.putBoolean(Utils.SLEEPING_KEY, preferences.getBoolean(Utils.SLEEPING_KEY, false));
+                //sensorData.putBoolean(Utils.SLEEPING_KEY, preferences.getBoolean(Utils.SLEEPING_KEY, false));
                 Log.d(TAG, "Recording new data item: " + sensorData);
+
                 saveData(sensorData);
             }
         }
@@ -116,24 +143,13 @@ public class DataStorageService extends WearableListenerService {
         File file = new File(directory, "wearable_data_"+timeStamp+".txt");
         */
 
-        File directory = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS), "coMotion");
-        if (! directory.exists()){
-            if (! directory.mkdirs()){
-                Log.d("CREATION OF NEW DIR", "failed to create directory");
-                return;
-            }
-        }
-        long timeStamp = System.currentTimeMillis();
-        File file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp+".txt");
-
-
         String dataJSON = dataMapAsJSONObject(data).toString() + "\n";
+
+        String dataToWrite = processStringForAcc(dataJSON);
+
         try {
-            FileOutputStream stream = new FileOutputStream(file, true);
-            OutputStreamWriter writer = new OutputStreamWriter(stream);
-            writer.write(dataJSON);
-            writer.close();
+            //writer.write(dataJSON);
+            writer.write(dataToWrite);
 
         } catch (Exception e) {
             Log.d(TAG, "Error Saving");
@@ -151,5 +167,34 @@ public class DataStorageService extends WearableListenerService {
         Log.d(TAG, "onPeerDisconnected: " + peer);
     }
 
-}
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
 
+        try {
+            writer.close();
+        } catch (Exception e) {
+            Log.d(TAG, "Error In Closing The File Writer");
+        }
+    }
+
+    //process the string before storing for direct input to Excel
+    private String processStringForAcc(String rawString) {
+        String result = null;
+        String temp1,temp2;
+
+        try {
+            String[] temp;
+            temp = rawString.split("\\[");
+            temp1 = temp[1].split("\\]")[0];
+            temp2 = temp[1].split(":")[1];
+            temp2 = temp2.substring(0, temp2.length() - 1);
+
+            result = temp1 + "," + temp2;
+        } catch (Exception E) {
+            Log.d(TAG, "Incomplete processing");
+        }
+        return result;
+    }
+
+}

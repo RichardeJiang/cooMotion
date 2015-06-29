@@ -1,7 +1,7 @@
 package com.example.richardjiang.comotion;
 
 /**
- * Created by Richard Jiang on 6/27/2015.
+ * Created by Richard Jiang on 6/29/2015.
  */
 import android.app.Notification;
 import android.content.Context;
@@ -26,11 +26,12 @@ import java.util.concurrent.Executors;
 /**
  * Created by Richard Jiang on 6/26/2015.
  */
-public class WearDataCollector extends WearableListenerService implements SensorEventListener {
+public class WearPatternCollector extends WearableListenerService implements SensorEventListener {
     private static final String TAG = "WearDataCollector";
 
     private static final int TRANSMISSION_GAP = 40;
     private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
+    private static final int PATTERN_LENGTH = 100;
 
     private static long currentTimeStamp;
     private static long prevTimeStamp = System.currentTimeMillis();
@@ -53,12 +54,12 @@ public class WearDataCollector extends WearableListenerService implements Sensor
         mExecutorService = Executors.newCachedThreadPool();
         mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
-        System.out.println("INSIDE THE WEAR DATA COLLECTION METHOD!");
+        System.out.println("INSIDE THE WEAR DATA PATTERN RECORDING METHOD!");
 
         //notification on the watch
         Notification.Builder builder = new Notification.Builder(this);
         builder.setContentTitle("coMotion");
-        builder.setContentText("Collecting sensor data...");
+        builder.setContentText("Collecting sensor pattern data...");
         builder.setSmallIcon(R.drawable.ic_launcher);
 
         startForeground(1, builder.build());
@@ -197,4 +198,5 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
 
 }
+
 
