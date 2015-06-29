@@ -73,6 +73,7 @@ public class WearDataCollector extends WearableListenerService implements Sensor
     @Override
     public void onSensorChanged(final SensorEvent event) {
 
+        //for now the collector will only collect data for linear-accelerometer
         if(event.sensor.getType() != SENS_LINEAR_ACCELERATION) {
             return;
         }
@@ -119,7 +120,7 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
     private void sendSensorData(int sensorType, int accuracy, long timeStamp, float[] values) {
 
-        Log.d(TAG, "snedSensorData");
+        Log.d(TAG, "sendSensorData");
 
         //for debugging purpose
         System.out.println("INSIDE THE SENDING METHOD");

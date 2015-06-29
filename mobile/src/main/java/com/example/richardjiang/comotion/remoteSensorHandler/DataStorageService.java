@@ -125,7 +125,7 @@ public class DataStorageService extends WearableListenerService {
             }
         }
         long timeStamp = System.currentTimeMillis();
-        File file = new File(directory.getPath()+File.separator+"wearable_data"+timeStamp+".txt");
+        File file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp+".txt");
 
 
         String dataJSON = dataMapAsJSONObject(data).toString() + "\n";
