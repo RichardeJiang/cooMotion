@@ -25,7 +25,7 @@ public class WearPatternActivity extends Activity implements AdapterView.OnItemS
     private Toolbar mToolbar;
 
     private Spinner spnLength,spnDelay;
-    private Button btnConfirm;
+    private Button btnPatternRecord;
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
@@ -50,36 +50,8 @@ public class WearPatternActivity extends Activity implements AdapterView.OnItemS
 
         final Context context = this;
 
-        Button btnStartWatch = (Button) findViewById(R.id.btnStartWatch);
-        btnStartWatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
-                intent.putExtra(Utils.STORE_COMMAND, Utils.START_MEASUREMENT);
-                startService(intent);
-            }
-        });
-
-        Button btnStopWatch = (Button) findViewById(R.id.btnStopWatch);
-        btnStopWatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
-                intent.putExtra(Utils.STORE_COMMAND, Utils.STOP_MEASUREMENT);
-                startService(intent);
-            }
-        });
-
-        Button btnPatternWatch = (Button) findViewById(R.id.btnPatternWatch);
-        btnPatternWatch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearPatternActivity.class);
-                startActivity(intent);
-            }
-        });
-
         addListenerOnSpinnerItemSelection();
+        addListenerOnButton();
 
     }
 
@@ -113,5 +85,26 @@ public class WearPatternActivity extends Activity implements AdapterView.OnItemS
 
         spnDelay = (Spinner) findViewById(R.id.edit_delay_spinner);
         spnDelay.setOnItemSelectedListener(this);
+    }
+
+    private void addListenerOnButton() {
+        spnDelay = (Spinner) findViewById(R.id.edit_delay_spinner);
+        spnLength = (Spinner) findViewById(R.id.edit_length_spinner);
+
+        btnPatternRecord = (Button) findViewById(R.id.btnPatternWatch);
+        btnPatternRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String delay = String.valueOf(spnDelay.getSelectedItem());
+                String length = String.valueOf(spnLength.getSelectedItem());
+                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
+                //intent.putExtra(Utils.STORE_COMMAND, Utils.START_PATTERN + "," + delay + "," + length);
+                intent.putExtra(Utils.STORE_COMMAND, Utils.START_PATTERN);
+                intent.putExtra(Utils.DELAY, delay);
+                intent.putExtra(Utils.LENGTH, length);
+
+                startService(intent);
+            }
+        });
     }
 }

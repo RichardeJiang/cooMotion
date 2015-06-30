@@ -42,6 +42,8 @@
                 android:value="com.example.richardjiang.comotion.activityMain.MainActivity" />
         </activity>
 
+        <activity android:name=".remoteSensorHandler.WearPatternActivity" />
+
         <!--
         <activity android:name=".cameraTest.cameraTestActivity" />
 

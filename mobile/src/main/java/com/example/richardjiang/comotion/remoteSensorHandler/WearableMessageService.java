@@ -66,11 +66,15 @@ public class WearableMessageService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
 
+        String tempCommand;
         Bundle message = intent.getExtras();
         if(message == null) {
             Log.d(TAG, "Command not received");
         }
         else {
+            //tempCommand = (String) message.get(Utils.STORE_COMMAND);
+
+            //commandType = tempCommand.split(",")[0];
             commandType = (String) message.get(Utils.STORE_COMMAND);
         }
 
@@ -86,8 +90,15 @@ public class WearableMessageService extends IntentService {
             }
         }
         else if(commandType.equals(Utils.START_PATTERN)) {
+
+            //String delay = tempCommand.split(",")[1];
+            //String length = tempCommand.split(",")[2];
+            String delay = (String) message.get(Utils.DELAY);
+            String length = (String) message.get(Utils.LENGTH);
+            tempCommand = commandType + "," + delay + "," + length;
             for (String node: getNodes()) {
-                sendMessage(node, Utils.START_PATTERN);
+                sendMessage(node, tempCommand);
+                //sendMessage(node, Utils.START_PATTERN);
                 System.out.println("INSIDE THE PATTERN RECORDING PART");
             }
         }
@@ -122,4 +133,3 @@ public class WearableMessageService extends IntentService {
     }
 
 }
-

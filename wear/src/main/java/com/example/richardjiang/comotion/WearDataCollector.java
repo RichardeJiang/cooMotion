@@ -55,13 +55,6 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         System.out.println("INSIDE THE WEAR DATA COLLECTION METHOD!");
 
-        //notification on the watch
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setContentTitle("coMotion");
-        builder.setContentText("Collecting sensor data...");
-        builder.setSmallIcon(R.drawable.ic_launcher);
-
-        startForeground(1, builder.build());
 
     }
 
@@ -104,7 +97,11 @@ public class WearDataCollector extends WearableListenerService implements Sensor
     public void onMessageReceived(MessageEvent messageEvent) {
 
         // Check to see if the message is to start an activity
-        String path = messageEvent.getPath();
+        String path, tempCommand;
+        tempCommand = messageEvent.getPath();
+        path = tempCommand.split(",")[0];
+
+        //String path = messageEvent.getPath();
         Log.d(TAG, "onMessageReceived: " + path);
         System.out.println("INSIDE THE MESSAGE RECEIVING METHOD");
 
@@ -117,7 +114,55 @@ public class WearDataCollector extends WearableListenerService implements Sensor
         }
 
         if (path.equals(Utils.START_PATTERN)) {
+            String delay = tempCommand.split(",")[1];
+            String length = tempCommand.split(",")[2];
+            int delayTime, lengthOfRecord;
+            switch(delay) {
+                case "1 sec":
+                    delayTime = 1000;
+                    break;
+                case "2 sec":
+                    delayTime = 2000;
+                    break;
+                case "3 sec":
+                    delayTime = 3000;
+                    break;
+                case "4 sec":
+                    delayTime = 4000;
+                    break;
+                default:
+                    delayTime = 0;
+                    break;
+            }
+            switch(length) {
+                case "1 sec":
+                    lengthOfRecord = 1000;
+                    break;
+                case "2 sec":
+                    lengthOfRecord = 2000;
+                    break;
+                case "3 sec":
+                    lengthOfRecord = 3000;
+                    break;
+                case "4 sec":
+                    lengthOfRecord = 4000;
+                    break;
+                default:
+                    lengthOfRecord = 3000;
+                    break;
+            }
+            try {
+                Thread.sleep(delayTime);
+            } catch(InterruptedException e) {
+                Log.d(TAG, "Delay is interrupted.");
+            }
             startSensorListeners();
+            try {
+                Thread.sleep(lengthOfRecord);
+            } catch(InterruptedException e) {
+                Log.d(TAG, "Recording is interrupted.");
+            }
+            stopSensorListeners();
         }
 
     }
@@ -147,6 +192,15 @@ public class WearDataCollector extends WearableListenerService implements Sensor
         //This is how to get all the sensors
         //here we start with the linear accelerometer
         //List<Sensor> sensors = sensorManager.getSensorList(Sensor.TYPE_ALL);
+
+        //notification on the watch
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setContentTitle("coMotion");
+        builder.setContentText("Collecting sensor data...");
+        builder.setSmallIcon(R.drawable.ic_launcher);
+
+        startForeground(1, builder.build());
+
 
         mSensor_LinearAcc = mSensorManager.getDefaultSensor(SENS_LINEAR_ACCELERATION);
 

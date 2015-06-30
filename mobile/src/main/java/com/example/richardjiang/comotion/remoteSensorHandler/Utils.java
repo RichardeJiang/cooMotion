@@ -14,6 +14,8 @@ public class Utils {
     public static final String SENSOR_DATA_PATH = "/sensor-data";
     public static final String STORE_COMMAND = "get_type";
     public static final String START_PATTERN = "/start_pattern";
+    public static final String DELAY = "delay";
+    public static final String LENGTH = "length";
 
     public static final String SHARED_PREFS_KEY = "Data_Storage_Prefs";
     public static final String SLEEPING_KEY = "sleeping";

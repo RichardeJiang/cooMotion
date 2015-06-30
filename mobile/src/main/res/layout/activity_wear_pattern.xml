@@ -44,8 +44,16 @@
             android:prompt="@string/delay_prompt"
             android:layout_gravity="center_horizontal" />
 
-
-
+        <Button
+            android:id="@+id/btnPatternWatch"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/driver"
+            android:elevation="10dp"
+            android:text="Record Pattern"
+            android:layout_gravity="center_horizontal"
+            />
 
 
 
