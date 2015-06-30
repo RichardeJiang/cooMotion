@@ -114,26 +114,9 @@ public class WearDataCollector extends WearableListenerService implements Sensor
         }
 
         if (path.equals(Utils.START_PATTERN)) {
-            String delay = tempCommand.split(",")[1];
-            String length = tempCommand.split(",")[2];
-            int delayTime, lengthOfRecord;
-            switch(delay) {
-                case "1 sec":
-                    delayTime = 1000;
-                    break;
-                case "2 sec":
-                    delayTime = 2000;
-                    break;
-                case "3 sec":
-                    delayTime = 3000;
-                    break;
-                case "4 sec":
-                    delayTime = 4000;
-                    break;
-                default:
-                    delayTime = 0;
-                    break;
-            }
+            String length = tempCommand.split(",")[1];
+            int lengthOfRecord;
+
             switch(length) {
                 case "1 sec":
                     lengthOfRecord = 1000;
@@ -150,11 +133,6 @@ public class WearDataCollector extends WearableListenerService implements Sensor
                 default:
                     lengthOfRecord = 3000;
                     break;
-            }
-            try {
-                Thread.sleep(delayTime);
-            } catch(InterruptedException e) {
-                Log.d(TAG, "Delay is interrupted.");
             }
             startSensorListeners();
             try {

@@ -91,11 +91,8 @@ public class WearableMessageService extends IntentService {
         }
         else if(commandType.equals(Utils.START_PATTERN)) {
 
-            //String delay = tempCommand.split(",")[1];
-            //String length = tempCommand.split(",")[2];
-            String delay = (String) message.get(Utils.DELAY);
             String length = (String) message.get(Utils.LENGTH);
-            tempCommand = commandType + "," + delay + "," + length;
+            tempCommand = commandType + "," + length;
             for (String node: getNodes()) {
                 sendMessage(node, tempCommand);
                 //sendMessage(node, Utils.START_PATTERN);
