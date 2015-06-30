@@ -116,6 +116,10 @@ public class WearDataCollector extends WearableListenerService implements Sensor
             stopSensorListeners();
         }
 
+        if (path.equals(Utils.START_PATTERN)) {
+            startSensorListeners();
+        }
+
     }
 
     private void sendSensorData(int sensorType, int accuracy, long timeStamp, float[] values) {

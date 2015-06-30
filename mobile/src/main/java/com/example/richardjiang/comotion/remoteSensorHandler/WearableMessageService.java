@@ -85,6 +85,12 @@ public class WearableMessageService extends IntentService {
                 sendMessage(node, Utils.STOP_MEASUREMENT);
             }
         }
+        else if(commandType.equals(Utils.START_PATTERN)) {
+            for (String node: getNodes()) {
+                sendMessage(node, Utils.START_PATTERN);
+                System.out.println("INSIDE THE PATTERN RECORDING PART");
+            }
+        }
     }
 
     private Collection<String> getNodes() {

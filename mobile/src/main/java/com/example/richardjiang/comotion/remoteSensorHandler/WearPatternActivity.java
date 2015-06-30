@@ -1,39 +1,46 @@
-package com.example.richardjiang.comotion.activityMain;
+package com.example.richardjiang.comotion.remoteSensorHandler;
 
-/**
- * Created by Richard Jiang on 6/27/2015.
- */
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
-import android.support.v7.widget.Toolbar;
+import android.widget.Spinner;
 
 import com.example.richardjiang.comotion.R;
-import com.example.richardjiang.comotion.cameraHandler.CameraActivity;
-import com.example.richardjiang.comotion.networkHandler.NetworkActivityTemplate;
-import com.example.richardjiang.comotion.networkHandler.activity.PeerSettingActivity;
-import com.example.richardjiang.comotion.networkHandler.controller.WiFiDirectBroadcastConnectionController;
-import com.example.richardjiang.comotion.remoteSensorHandler.Utils;
-import com.example.richardjiang.comotion.remoteSensorHandler.WearPatternActivity;
-import com.example.richardjiang.comotion.remoteSensorHandler.WearableMessageService;
+import com.example.richardjiang.comotion.activityMain.ApplicationHelper;
 
+/**
+ * Created by Richard Jiang on 6/29/2015.
+ */
+public class WearPatternActivity extends Activity implements AdapterView.OnItemSelectedListener {
 
-public class MainActivity extends NetworkActivityTemplate {
-
-    private ActivityStatus activityStatus = ActivityStatus.NONE;
-    private String debugTag = "MAIN_ACTIVITY";
+    private static final String TAG = "WearPatternActivity";
     private Toolbar mToolbar;
+
+    private Spinner spnLength,spnDelay;
+    private Button btnConfirm;
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> arg0) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_wear_pattern);
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -42,36 +49,6 @@ public class MainActivity extends NetworkActivityTemplate {
         //mToolbar.setTitle("OK");
 
         final Context context = this;
-        Button btnFindPeer = (Button) findViewById(R.id.btnPeerSettings);
-        btnFindPeer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), PeerSettingActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        Button btnHelp = (Button) findViewById(R.id.btnHelp);
-        btnHelp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new AlertDialog.Builder(context)
-                        //.setMessage(R.string.intro_message)
-                        .setMessage(R.string.help_message)
-                        .setPositiveButton(R.string.got_it, null)
-                        .show();
-            }
-        });
-
-        Button btnStartCapturing = (Button) findViewById(R.id.btnStartCapturing);
-        btnStartCapturing.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), CameraActivity.class);
-                startActivity(intent);
-            }
-        });
 
         Button btnStartWatch = (Button) findViewById(R.id.btnStartWatch);
         btnStartWatch.setOnClickListener(new View.OnClickListener() {
@@ -102,8 +79,11 @@ public class MainActivity extends NetworkActivityTemplate {
             }
         });
 
-        WiFiDirectBroadcastConnectionController.getInstance().discoverPeers();
+        addListenerOnSpinnerItemSelection();
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -125,5 +105,13 @@ public class MainActivity extends NetworkActivityTemplate {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void addListenerOnSpinnerItemSelection() {
+        spnLength = (Spinner) findViewById(R.id.edit_length_spinner);
+        spnLength.setOnItemSelectedListener(this);
+
+        spnDelay = (Spinner) findViewById(R.id.edit_delay_spinner);
+        spnDelay.setOnItemSelectedListener(this);
     }
 }
