@@ -38,8 +38,8 @@ public class DataStorageService extends WearableListenerService {
     //private SharedPreferences preferences;
     private File directory;
     private File file;
-    private FileOutputStream stream;
-    private OutputStreamWriter writer;
+    //private FileOutputStream stream;
+    //private OutputStreamWriter writer;
 
     @Override
     public void onCreate() {
@@ -62,6 +62,7 @@ public class DataStorageService extends WearableListenerService {
         long timeStamp = System.currentTimeMillis();
         file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp+".txt");
 
+        /*
         try {
             stream = new FileOutputStream(file, true);
             writer = new OutputStreamWriter(stream);
@@ -70,6 +71,7 @@ public class DataStorageService extends WearableListenerService {
             Log.d(TAG, "Error In Creating The File Writer");
             e.printStackTrace();
         }
+        */
 
 
         //for testing purpose
@@ -148,8 +150,11 @@ public class DataStorageService extends WearableListenerService {
         String dataToWrite = processStringForAcc(dataJSON);
 
         try {
+            FileOutputStream stream = new FileOutputStream(file, true);
+            OutputStreamWriter writer = new OutputStreamWriter(stream);
             //writer.write(dataJSON);
             writer.write(dataToWrite);
+            writer.close();
 
         } catch (Exception e) {
             Log.d(TAG, "Error Saving");
@@ -171,11 +176,6 @@ public class DataStorageService extends WearableListenerService {
     public void onDestroy() {
         super.onDestroy();
 
-        try {
-            writer.close();
-        } catch (Exception e) {
-            Log.d(TAG, "Error In Closing The File Writer");
-        }
     }
 
     //process the string before storing for direct input to Excel

@@ -30,7 +30,7 @@
 
         <Spinner
             android:id="@+id/edit_length_spinner"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/pattern_length_array"
             android:prompt="@string/length_prompt"
@@ -38,7 +38,7 @@
 
         <Spinner
             android:id="@+id/edit_delay_spinner"
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:entries="@array/pattern_delay_array"
             android:prompt="@string/delay_prompt"
