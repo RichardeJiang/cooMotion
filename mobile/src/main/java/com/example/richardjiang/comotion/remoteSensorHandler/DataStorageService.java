@@ -28,6 +28,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -59,8 +60,10 @@ public class DataStorageService extends WearableListenerService {
                 return;
             }
         }
+
+        String timeStamp_1 = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         long timeStamp = System.currentTimeMillis();
-        file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp+".txt");
+        file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp_1+".txt");
 
         /*
         try {

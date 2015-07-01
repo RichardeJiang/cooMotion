@@ -20,6 +20,8 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -148,11 +150,14 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         Log.d(TAG, "sendSensorData");
 
+        String timeStamp_1 = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
         //for debugging purpose
         System.out.println("INSIDE THE SENDING METHOD");
 
         mSensorData = PutDataMapRequest.create(Utils.SENSOR_DATA_PATH);
-        mSensorData.getDataMap().putLong(Utils.TIMESTAMP, timeStamp);
+        //mSensorData.getDataMap().putLong(Utils.TIMESTAMP, timeStamp);
+        mSensorData.getDataMap().putString(Utils.TIMESTAMP, timeStamp_1);    //put in the absolute time
         mSensorData.getDataMap().putInt(Utils.ACCURACY, accuracy);
         mSensorData.getDataMap().putFloatArray(Utils.VALUES, values);
 

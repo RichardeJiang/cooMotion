@@ -10,6 +10,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Matrix;
 import android.graphics.RectF;
@@ -59,6 +60,8 @@ import com.example.richardjiang.comotion.networkHandler.impl.InternalMessage;
 import com.example.richardjiang.comotion.networkHandler.impl.NetworkMessageObject;
 
 import com.example.richardjiang.comotion.cameraHandler.CameraActivity;
+import com.example.richardjiang.comotion.remoteSensorHandler.WearableMessageService;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -383,9 +386,21 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.video: {
                 if (mIsRecordingVideo) {
+
+                    //android wear command to stop
+                    Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
+                    intent.putExtra(com.example.richardjiang.comotion.remoteSensorHandler.Utils.STORE_COMMAND, com.example.richardjiang.comotion.remoteSensorHandler.Utils.STOP_MEASUREMENT);
+                    getActivity().startService(intent);
+
                     stopRecordingVideo();
                 } else {
                     captureMode = 1;
+
+                    //android wear command to start
+                    Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
+                    intent.putExtra(com.example.richardjiang.comotion.remoteSensorHandler.Utils.STORE_COMMAND, com.example.richardjiang.comotion.remoteSensorHandler.Utils.START_MEASUREMENT);
+                    getActivity().startService(intent);
+
                     startRecordingVideo();
 
                 }
@@ -406,6 +421,14 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                                         targetIP));
                         ApplicationHelper.showToastMessage("I send " + messageToSend + " from " + myIP.toString());
                         captureMode = 2;
+
+                        //android wear command to start
+                        Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
+                        intent.putExtra(com.example.richardjiang.comotion.remoteSensorHandler.Utils.STORE_COMMAND, com.example.richardjiang.comotion.remoteSensorHandler.Utils.START_MEASUREMENT);
+                        getActivity().startService(intent);
+
+                        //IMPORATNT: PUT STARTRECORDINGVIDEO AT THE END; OTHERWISE SOME CODE WON'T BE EXECUTED UNTIL RECORDING IS FINISHED
+                        //SINCE WE ONLY HAVE ONE THREAD HERE
                         startRecordingVideo();
 
                     } catch (Exception e) {
@@ -423,6 +446,12 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                                         myIP,
                                         targetIP));
                         ApplicationHelper.showToastMessage("I send " + messageToSend + " from " + myIP.toString());
+
+                        //android wear command to stop
+                        Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
+                        intent.putExtra(com.example.richardjiang.comotion.remoteSensorHandler.Utils.STORE_COMMAND, com.example.richardjiang.comotion.remoteSensorHandler.Utils.STOP_MEASUREMENT);
+                        getActivity().startService(intent);
+
                         stopRecordingVideo();
                     } catch (Exception e) {
                         ApplicationHelper.showToastMessage("Failed to send: stopNow");
@@ -703,8 +732,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     NotificationCompat.Builder notificationBuilder =
                             new NotificationCompat.Builder(ApplicationHelper.getActivityInstance())
                                     .setSmallIcon(R.drawable.ic_notification)
-                                    .setContentTitle("Test")
-                                    .setContentText("Test the notification");
+                                    .setContentTitle("coMotion")
+                                    .setContentText("Recording video...");
 
                     NotificationManagerCompat notificationManager =
                             NotificationManagerCompat.from(ApplicationHelper.getActivityInstance());

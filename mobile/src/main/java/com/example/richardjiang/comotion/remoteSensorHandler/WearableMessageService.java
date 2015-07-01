@@ -56,6 +56,7 @@ public class WearableMessageService extends IntentService {
         }
     }
 
+
     /*
 
     the corresponding putExtra method which should be inserted inside the caller
