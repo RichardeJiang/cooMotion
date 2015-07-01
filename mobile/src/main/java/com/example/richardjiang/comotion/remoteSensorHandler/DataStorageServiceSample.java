@@ -1,8 +1,9 @@
 package com.example.richardjiang.comotion.remoteSensorHandler;
 
 /**
- * Created by Richard Jiang on 6/27/2015.
+ * Created by Richard Jiang on 6/30/2015.
  */
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -20,60 +21,34 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
-
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.util.*;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-public class DataStorageService extends WearableListenerService {
+public class DataStorageServiceSample extends WearableListenerService {
     private static final String TAG = "DataStorageService";
+    private static final String SENSOR_DATA_PATH = "/sensor-data";
+    private static final String SHARED_PREFS_KEY = "data-collection-prefs";
+    private static final String SLEEPING_KEY = "sleeping";
 
     private GoogleApiClient mGoogleApiClient;
-    //private SharedPreferences preferences;
-    private File directory;
-    private File file;
-    private FileOutputStream stream;
-    private OutputStreamWriter writer;
+    private SharedPreferences preferences;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        //preferences = getSharedPreferences(Utils.SHARED_PREFS_KEY, Context.MODE_PRIVATE);
+        preferences = getSharedPreferences(SHARED_PREFS_KEY, Context.MODE_PRIVATE);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .build();
         mGoogleApiClient.connect();
 
-        //originally from the saveData method
-        directory = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS), "coMotion");
-        if (! directory.exists()){
-            if (! directory.mkdirs()){
-                Log.d(TAG, "failed to create directory");
-                return;
-            }
-        }
-        long timeStamp = System.currentTimeMillis();
-        file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp+".txt");
-
-        try {
-            stream = new FileOutputStream(file, true);
-            writer = new OutputStreamWriter(stream);
-
-        } catch (Exception e) {
-            Log.d(TAG, "Error In Creating The File Writer");
-            e.printStackTrace();
-        }
-
-
-        //for testing purpose
-        System.out.println("INSIDE THE DATA STORAGE PART!!!");
     }
 
     @Override
@@ -94,12 +69,11 @@ public class DataStorageService extends WearableListenerService {
         for (DataEvent event : events) {
             Uri uri = event.getDataItem().getUri();
             String path = uri.getPath();
-            if (Utils.SENSOR_DATA_PATH.equals(path) && event.getType() == DataEvent.TYPE_CHANGED) {
+            if (SENSOR_DATA_PATH.equals(path) && event.getType() == DataEvent.TYPE_CHANGED) {
                 byte[] rawData = event.getDataItem().getData();
                 DataMap sensorData = DataMap.fromByteArray(rawData);
-                //sensorData.putBoolean(Utils.SLEEPING_KEY, preferences.getBoolean(Utils.SLEEPING_KEY, false));
+                sensorData.putBoolean(SLEEPING_KEY, preferences.getBoolean(SLEEPING_KEY, false));
                 Log.d(TAG, "Recording new data item: " + sensorData);
-
                 saveData(sensorData);
             }
         }
@@ -115,7 +89,6 @@ public class DataStorageService extends WearableListenerService {
                 json.put(key, JSONObject.wrap(bundle.get(key)));
             } catch(JSONException e) {
                 //Handle exception here
-                Log.d(TAG, "Json put failed");
             }
         }
         return json;
@@ -136,20 +109,25 @@ public class DataStorageService extends WearableListenerService {
             return;
         }
 
-        /*
-        File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        directory.mkdirs();
+        File directory = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS), "coMotion");
+        if (! directory.exists()){
+            if (! directory.mkdirs()){
+                Log.d("CREATION OF NEW DIR", "failed to create directory");
+                return;
+            }
+        }
+        //File directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        //directory.mkdirs();
         long timeStamp = System.currentTimeMillis();
-        File file = new File(directory, "wearable_data_"+timeStamp+".txt");
-        */
-
+        File file = new File(directory, "wearable_data_" + timeStamp + ".txt");
         String dataJSON = dataMapAsJSONObject(data).toString() + "\n";
-
-        String dataToWrite = processStringForAcc(dataJSON);
-
+        String resultToWrite = processStringForAcc(dataJSON);
         try {
-            //writer.write(dataJSON);
-            writer.write(dataToWrite);
+            FileOutputStream stream = new FileOutputStream(file, true);
+            OutputStreamWriter writer = new OutputStreamWriter(stream);
+            writer.write(resultToWrite);
+            writer.close();
 
         } catch (Exception e) {
             Log.d(TAG, "Error Saving");
@@ -165,17 +143,6 @@ public class DataStorageService extends WearableListenerService {
     @Override
     public void onPeerDisconnected(Node peer) {
         Log.d(TAG, "onPeerDisconnected: " + peer);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        try {
-            writer.close();
-        } catch (Exception e) {
-            Log.d(TAG, "Error In Closing The File Writer");
-        }
     }
 
     //process the string before storing for direct input to Excel

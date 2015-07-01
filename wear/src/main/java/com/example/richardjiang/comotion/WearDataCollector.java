@@ -55,7 +55,6 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         System.out.println("INSIDE THE WEAR DATA COLLECTION METHOD!");
 
-
     }
 
     @Override // SensorEventListener
@@ -161,7 +160,6 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         Wearable.DataApi.putDataItem(mGoogleApiClient, putDataRequest);
 
-
     }
 
     private void startSensorListeners() {
@@ -179,11 +177,8 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         startForeground(1, builder.build());
 
-
         mSensor_LinearAcc = mSensorManager.getDefaultSensor(SENS_LINEAR_ACCELERATION);
-
-        float[] empty = new float[0];
-
+        //float[] empty = new float[0];
         if(mSensorManager != null) {
             if(mSensor_LinearAcc != null) {
                 mSensorManager.registerListener(this, mSensor_LinearAcc, SensorManager.SENSOR_DELAY_NORMAL);
@@ -233,4 +228,3 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
 
 }
-

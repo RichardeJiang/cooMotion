@@ -33,11 +33,13 @@ public class WearPatternActivity extends Activity implements AdapterView.OnItemS
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        btnPatternRecord.setEnabled(true);
         return;
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> arg0) {
+        btnPatternRecord.setEnabled(false);
         return;
     }
 

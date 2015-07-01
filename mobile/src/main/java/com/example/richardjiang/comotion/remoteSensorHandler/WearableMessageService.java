@@ -43,6 +43,7 @@ public class WearableMessageService extends IntentService {
 
     }
 
+    //TODO: don't know whether this is still needed or not since the command is received in the handle
     @Override
     public void onStart(Intent intent, int startID) {
         super.onStart(intent, startID);
@@ -73,7 +74,6 @@ public class WearableMessageService extends IntentService {
         }
         else {
             //tempCommand = (String) message.get(Utils.STORE_COMMAND);
-
             //commandType = tempCommand.split(",")[0];
             commandType = (String) message.get(Utils.STORE_COMMAND);
         }
@@ -87,6 +87,7 @@ public class WearableMessageService extends IntentService {
         else if(commandType.equals(Utils.STOP_MEASUREMENT)) {
             for (String node : getNodes()) {
                 sendMessage(node, Utils.STOP_MEASUREMENT);
+                System.out.println("IIINNNFFFOOORRRMMMAAATTTIIIOO SENT");
             }
         }
         else if(commandType.equals(Utils.START_PATTERN)) {

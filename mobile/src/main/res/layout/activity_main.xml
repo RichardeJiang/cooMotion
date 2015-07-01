@@ -37,16 +37,6 @@
         tools:ignore="UselessParent" >
 
         <!--
-        android:background="@color/bright_foreground_material_dark"
-        <CheckBox
-            android:id="@+id/checkboxShowROI"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:text="ROI" />
-            -->
-
-        <!--
         android:layout_gravity="right|bottom"
         -->
 
@@ -178,13 +168,7 @@
             android:layout_gravity="center_horizontal"
             />
 
-
-
-
     </LinearLayout>
-
-
-
     <!--
     android:layout_gravity="left|bottom"
     -->
