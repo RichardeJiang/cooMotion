@@ -17,8 +17,11 @@ import android.support.v7.widget.Toolbar;
 import com.example.richardjiang.comotion.R;
 import com.example.richardjiang.comotion.cameraHandler.CameraActivity;
 import com.example.richardjiang.comotion.networkHandler.NetworkActivityTemplate;
+import com.example.richardjiang.comotion.networkHandler.NetworkService;
 import com.example.richardjiang.comotion.networkHandler.activity.PeerSettingActivity;
 import com.example.richardjiang.comotion.networkHandler.controller.WiFiDirectBroadcastConnectionController;
+import com.example.richardjiang.comotion.networkHandler.impl.InternalMessage;
+import com.example.richardjiang.comotion.networkHandler.impl.NetworkMessageObject;
 import com.example.richardjiang.comotion.remoteSensorHandler.Utils;
 import com.example.richardjiang.comotion.remoteSensorHandler.WearPatternActivity;
 import com.example.richardjiang.comotion.remoteSensorHandler.WearableMessageService;
@@ -29,6 +32,14 @@ public class MainActivity extends NetworkActivityTemplate {
     private ActivityStatus activityStatus = ActivityStatus.NONE;
     private String debugTag = "MAIN_ACTIVITY";
     private Toolbar mToolbar;
+
+    //IMPORTANT
+    //For every class using network override this method
+    //override this method to start discovery peers automatically
+    @Override
+    protected boolean performConnectionDiscovery() {
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +67,33 @@ public class MainActivity extends NetworkActivityTemplate {
             @Override
             public void onClick(View v) {
 
+                /*
                 new AlertDialog.Builder(context)
                         //.setMessage(R.string.intro_message)
                         .setMessage(R.string.help_message)
                         .setPositiveButton(R.string.got_it, null)
                         .show();
+                        */
+
+                //for testing purpose
+                try{
+                    byte[] targetIP = com.example.richardjiang.comotion.networkHandler.Utils.getBytesFromIp("255.255.255.255");
+                    byte[] myIP = WiFiDirectBroadcastConnectionController.getNetworkService().getMyIp();
+                    String messageToSend = "test whether the handler is working hahahaha";
+                    WiFiDirectBroadcastConnectionController.getNetworkService().sendMessage(
+                            new NetworkMessageObject(
+                                    messageToSend.getBytes(),
+                                    InternalMessage.testNetworkHandler,
+                                    myIP,
+                                    targetIP));
+                    ApplicationHelper.showToastMessage("I send " + messageToSend);
+                }catch(Exception e){
+                    ApplicationHelper.showToastMessage("Failed to send: test network handler");
+                }
+
+
+
+
             }
         });
 
@@ -103,7 +136,49 @@ public class MainActivity extends NetworkActivityTemplate {
         });
 
         WiFiDirectBroadcastConnectionController.getInstance().discoverPeers();
+        NetworkService.registerMessageHandler(internalMessageListener);
     }
+
+    private NetworkService.MessageHandleListener internalMessageListener = new NetworkService.MessageHandleListener() {
+
+        /**/
+        @Override
+        public boolean handleMessage(NetworkMessageObject message) {
+            String messageContent = "";
+            messageContent = InternalMessage.getMessageString(message);
+            System.out.println(message.getSourceIP() + " says: " + messageContent);
+
+            switch(message.code){
+
+                case InternalMessage.testNetworkHandler: {
+                    ApplicationHelper.showToastMessage(message.getSourceIP() + " sends to "
+                            + com.example.richardjiang.comotion.networkHandler.Utils.getIpAddressAsString(message.getTargetIP())
+                            + " and says "
+                            + messageContent);
+                }
+            }
+            return false;
+        }
+        /**/
+
+        /*
+        @Override
+        public boolean handleMessage(NetworkMessageObject message) {
+            if(mIsRecordingVideo){
+
+                ApplicationHelper.showToastMessage("Received to stop");
+                stopRecordingVideo();
+                return true;
+            } else{
+
+                ApplicationHelper.showToastMessage("Received to start");
+                startRecordingVideo();
+                return true;
+            }
+
+        }
+        */
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,4 +201,6 @@ public class MainActivity extends NetworkActivityTemplate {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

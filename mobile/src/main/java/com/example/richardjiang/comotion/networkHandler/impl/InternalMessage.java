@@ -26,6 +26,7 @@ public class InternalMessage extends NetworkMessageObject{
     public static final byte updateSkeleton = 5;
     public static final byte sendCoordinateNow = 6;
     public static final byte requestCoordinate = 7;
+    public static final byte testNetworkHandler = 8;
 
     public static String getMessageString(NetworkMessageObject msgObj){
         try {

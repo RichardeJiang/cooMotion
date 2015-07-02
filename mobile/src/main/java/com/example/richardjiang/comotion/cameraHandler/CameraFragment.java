@@ -316,18 +316,22 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         }
         */
 
-
         @Override
         public boolean handleMessage(NetworkMessageObject message) {
             if(mIsRecordingVideo){
-                stopRecordingVideo();
+
                 ApplicationHelper.showToastMessage("Received to stop");
-                return true;
+                stopRecordingVideo();
+                //return true;
             } else{
-                startRecordingVideo();
+
                 ApplicationHelper.showToastMessage("Received to start");
-                return true;
+                startRecordingVideo();
+                //return true;
             }
+
+            //newly added return statement
+            return false;
 
         }
     };
@@ -336,7 +340,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         WiFiDirectBroadcastConnectionController.getInstance().discoverPeers();
 
@@ -359,8 +362,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         mGroupVideo.setOnClickListener(this);
 
         view.findViewById(R.id.info).setOnClickListener(this);
-
-
     }
 
     @Override
@@ -726,8 +727,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                     mIsRecordingVideo = true;
 
-
                     //Notification trial part
+                    /*
                     int notificationID = 001;
                     NotificationCompat.Builder notificationBuilder =
                             new NotificationCompat.Builder(ApplicationHelper.getActivityInstance())
@@ -739,11 +740,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                             NotificationManagerCompat.from(ApplicationHelper.getActivityInstance());
 
                     notificationManager.notify(notificationID,notificationBuilder.build());
-
-
-
-
-
+                    */
 
                     // Start recording
                     mMediaRecorder.start();
