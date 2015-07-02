@@ -17,6 +17,8 @@ public abstract class NetworkService extends Thread{
          * 	true if the handling process is all done -- return from the execution process
          *
          * Assumption: at the time when this method is called, the network service object has been successfully initialized
+         *
+         * Additional notes from Jiang Shenhao: careful about the return value
          */
         public boolean handleMessage(NetworkMessageObject message);
     }

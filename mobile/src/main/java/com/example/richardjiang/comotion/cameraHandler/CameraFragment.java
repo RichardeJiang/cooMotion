@@ -23,6 +23,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Network;
 import android.os.Bundle;
@@ -105,6 +106,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
     //Button to start group recording
     private Button mGroupVideo;
+
 
     /**
      * A refernce to the opened {@link android.hardware.camera2.CameraDevice}.
@@ -344,6 +346,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
         WiFiDirectBroadcastConnectionController.getInstance().discoverPeers();
 
         NetworkService.registerMessageHandler(internalMessageListener);
+
+
     }
 
     @Override
@@ -726,6 +730,25 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     }
 
                     mIsRecordingVideo = true;
+
+                    //Play starting sound part
+                    if(WiFiDirectBroadcastConnectionController.getInstance().getIsGroupOwner()) {
+
+                        Thread thread = new Thread(new Runnable(){
+                            @Override
+                            public void run() {
+                                final MediaPlayer mMediaPlayer = MediaPlayer.create(getActivity(), R.raw.start_recording);
+                                mMediaPlayer.start();
+                            }
+                        });
+                        try {
+                            thread.sleep(5000);
+                        }catch (InterruptedException e) {
+                            Log.d(TAG, "interrupt in thread sleep of music playing");
+                        }
+                        thread.start();
+
+                    }
 
                     //Notification trial part
                     /*

@@ -31,7 +31,9 @@ import java.util.concurrent.Executors;
 public class WearDataCollector extends WearableListenerService implements SensorEventListener {
     private static final String TAG = "WearDataCollector";
 
-    private static final int TRANSMISSION_GAP = 40;
+    private static final int TRANSMISSION_GAP = 20;
+    //  1000/transmission_gap is the frequency of the collection service
+
     private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
 
     private static long currentTimeStamp;

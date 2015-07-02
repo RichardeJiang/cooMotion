@@ -8,6 +8,8 @@ import com.example.richardjiang.comotion.networkHandler.Utils;
 import com.example.richardjiang.comotion.networkHandler.impl.ClientService;
 import com.example.richardjiang.comotion.networkHandler.impl.ServerService;
 import com.example.richardjiang.comotion.activityMain.ApplicationHelper;
+
+import com.example.richardjiang.comotion.cameraHandler.CameraFragment;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,12 +42,14 @@ public class WiFiDirectBroadcastConnectionController extends BroadcastReceiver{
             if(info.isGroupOwner){
                 Log.v("DEBUG","This is group owner");
                 networkService = new ServerService();
+                isGroupOwner = true;
                 System.out.println("My addr as group owner: " +
                         Utils.getIpAddressAsString(Utils.getIPv4AddressOfInterface("p2p")));
             } else{
                 networkService = new ClientService(info.groupOwnerAddress.getAddress());
                 System.out.println("Group owner's Addr from the client side: " +
                         info.groupOwnerAddress.getHostAddress());
+                isGroupOwner = false;
             }
 
 //			networkService.sendMessage(MessageCode.message, "This is a test message");
@@ -56,12 +60,18 @@ public class WiFiDirectBroadcastConnectionController extends BroadcastReceiver{
         }
     };;
 
+    public boolean getIsGroupOwner() {
+        return isGroupOwner;
+    }
+
     private WifiP2pManager mManager;
     private Channel mChannel;
     private Activity mActivity;
     private IntentFilter mIntentFilter;
 
     private NetworkService networkService;
+
+    private boolean isGroupOwner;
 
     private static WiFiDirectBroadcastConnectionController instance;
 
