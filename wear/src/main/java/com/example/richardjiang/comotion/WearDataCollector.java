@@ -90,7 +90,12 @@ public class WearDataCollector extends WearableListenerService implements Sensor
         mExecutorService.submit(new Runnable() {
             @Override
             public void run() {
-                sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+
+                //String tempTimeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                //long timeStamp_2 = Integer.valueOf(tempTimeStamp);
+                //sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
+                //sendSensorData(event.sensor.getType(), event.accuracy, timeStamp_2, event.values);
+                sendSensorData(event.sensor.getType(), event.accuracy, currentTimeStamp, event.values);
             }
         });
 
@@ -152,14 +157,14 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         Log.d(TAG, "sendSensorData");
 
-        String timeStamp_1 = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        //String timeStamp_1 = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         //for debugging purpose
         System.out.println("INSIDE THE SENDING METHOD");
 
         mSensorData = PutDataMapRequest.create(Utils.SENSOR_DATA_PATH);
-        //mSensorData.getDataMap().putLong(Utils.TIMESTAMP, timeStamp);
-        mSensorData.getDataMap().putString(Utils.TIMESTAMP, timeStamp_1);    //put in the absolute time
+        mSensorData.getDataMap().putLong(Utils.TIMESTAMP, timeStamp);
+        //mSensorData.getDataMap().putString(Utils.TIMESTAMP, timeStamp_1);    //put in the absolute time
         mSensorData.getDataMap().putInt(Utils.ACCURACY, accuracy);
         mSensorData.getDataMap().putFloatArray(Utils.VALUES, values);
 

@@ -54,6 +54,9 @@
         <service android:name=".remoteSensorHandler.WearableMessageService" >
         </service>
 
+        <service android:name=".cameraHandler.MusicFlagService" >
+        </service>
+
 
         <!---->
         <service android:name=".remoteSensorHandler.DataStorageService" >

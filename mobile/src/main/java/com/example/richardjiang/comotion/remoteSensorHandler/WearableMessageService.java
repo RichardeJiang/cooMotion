@@ -43,7 +43,7 @@ public class WearableMessageService extends IntentService {
 
     }
 
-    //TODO: don't know whether this is still needed or not since the command is received in the handle
+    //TODO: don't know whether this method is still needed or not since the command is received in the handle
     @Override
     public void onStart(Intent intent, int startID) {
         super.onStart(intent, startID);

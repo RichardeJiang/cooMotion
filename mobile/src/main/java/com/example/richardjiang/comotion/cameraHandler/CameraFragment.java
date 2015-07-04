@@ -432,6 +432,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         intent.putExtra(com.example.richardjiang.comotion.remoteSensorHandler.Utils.STORE_COMMAND, com.example.richardjiang.comotion.remoteSensorHandler.Utils.START_MEASUREMENT);
                         getActivity().startService(intent);
 
+                        //background music play service command to start
+                        Intent intent_music_flag = new Intent(ApplicationHelper.getActivityInstance(), MusicFlagService.class);
+                        getActivity().startService(intent_music_flag);
+
                         //IMPORATNT: PUT STARTRECORDINGVIDEO AT THE END; OTHERWISE SOME CODE WON'T BE EXECUTED UNTIL RECORDING IS FINISHED
                         //SINCE WE ONLY HAVE ONE THREAD HERE
                         startRecordingVideo();
@@ -731,6 +735,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
 
                     mIsRecordingVideo = true;
 
+                    /*
+                    moving this part to a background service
+
                     //Play starting sound part
                     if(WiFiDirectBroadcastConnectionController.getInstance().getIsGroupOwner()) {
 
@@ -749,6 +756,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         thread.start();
 
                     }
+                    */
 
                     //Notification trial part
                     /*
