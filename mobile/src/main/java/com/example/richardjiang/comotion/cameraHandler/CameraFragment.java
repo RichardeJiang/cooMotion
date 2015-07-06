@@ -61,6 +61,7 @@ import com.example.richardjiang.comotion.networkHandler.impl.InternalMessage;
 import com.example.richardjiang.comotion.networkHandler.impl.NetworkMessageObject;
 
 import com.example.richardjiang.comotion.cameraHandler.CameraActivity;
+import com.example.richardjiang.comotion.remoteSensorHandler.DataStorageService;
 import com.example.richardjiang.comotion.remoteSensorHandler.WearableMessageService;
 
 
@@ -427,6 +428,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         ApplicationHelper.showToastMessage("I send " + messageToSend + " from " + myIP.toString());
                         captureMode = 2;
 
+                        //android wear storage service to start
+                        Intent intent_wear_storage = new Intent(ApplicationHelper.getActivityInstance(), DataStorageService.class);
+                        getActivity().startService(intent_wear_storage);
+
                         //android wear command to start
                         Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
                         intent.putExtra(com.example.richardjiang.comotion.remoteSensorHandler.Utils.STORE_COMMAND, com.example.richardjiang.comotion.remoteSensorHandler.Utils.START_MEASUREMENT);
@@ -460,6 +465,10 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                         Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
                         intent.putExtra(com.example.richardjiang.comotion.remoteSensorHandler.Utils.STORE_COMMAND, com.example.richardjiang.comotion.remoteSensorHandler.Utils.STOP_MEASUREMENT);
                         getActivity().startService(intent);
+
+                        //android wear storage service to stop
+                        Intent intent_wear_storage_stop = new Intent(ApplicationHelper.getActivityInstance(), DataStorageService.class);
+                        getActivity().stopService(intent_wear_storage_stop);
 
                         stopRecordingVideo();
                     } catch (Exception e) {

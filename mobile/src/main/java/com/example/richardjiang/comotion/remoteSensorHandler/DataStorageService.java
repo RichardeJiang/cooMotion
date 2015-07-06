@@ -179,6 +179,7 @@ public class DataStorageService extends WearableListenerService {
     public void onDestroy() {
         super.onDestroy();
 
+
     }
 
     //process the string before storing for direct input to Excel
