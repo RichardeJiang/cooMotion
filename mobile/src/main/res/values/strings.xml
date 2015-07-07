@@ -18,6 +18,8 @@
     <!--
     <string name="intro_message">Press to start recording</string>
     -->
+    <string name="camera_help">Record Single will record videos only on this device. \n\nRecord Group
+    will broadcast "record video" message to all connected devices.</string>
 
     <string-array name="pattern_length_array">
         <item>1 sec</item>

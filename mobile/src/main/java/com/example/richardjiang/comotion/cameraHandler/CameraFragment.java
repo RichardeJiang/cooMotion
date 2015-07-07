@@ -329,6 +329,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
             } else{
 
                 ApplicationHelper.showToastMessage("Received to start");
+                captureMode = 2;
                 startRecordingVideo();
                 //return true;
             }
@@ -484,7 +485,7 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 if (null != activity) {
                     new AlertDialog.Builder(activity)
                             //.setMessage(R.string.intro_message)
-                            .setMessage("Test")
+                            .setMessage("@string/camera_help")
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 }
@@ -743,29 +744,6 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                     }
 
                     mIsRecordingVideo = true;
-
-                    /*
-                    moving this part to a background service
-
-                    //Play starting sound part
-                    if(WiFiDirectBroadcastConnectionController.getInstance().getIsGroupOwner()) {
-
-                        Thread thread = new Thread(new Runnable(){
-                            @Override
-                            public void run() {
-                                final MediaPlayer mMediaPlayer = MediaPlayer.create(getActivity(), R.raw.start_recording);
-                                mMediaPlayer.start();
-                            }
-                        });
-                        try {
-                            thread.sleep(5000);
-                        }catch (InterruptedException e) {
-                            Log.d(TAG, "interrupt in thread sleep of music playing");
-                        }
-                        thread.start();
-
-                    }
-                    */
 
                     //Notification trial part
                     /*
