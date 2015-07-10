@@ -82,6 +82,8 @@ public class FileDialog extends Activity {
                 public void onClick(DialogInterface dialog, int which) {
                     mChosenFile = mPath + File.separator + mFileList[which];
                     //you can do stuff with the file here too
+
+                    System.out.println("File chosen");
                     Intent intent = new Intent();
                     intent.putExtra("MESSAGE", mChosenFile);
                     intent.putExtra("MIMEType", FTYPE);

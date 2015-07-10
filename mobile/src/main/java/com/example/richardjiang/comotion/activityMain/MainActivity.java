@@ -22,10 +22,12 @@ import com.example.richardjiang.comotion.networkHandler.activity.PeerSettingActi
 import com.example.richardjiang.comotion.networkHandler.controller.WiFiDirectBroadcastConnectionController;
 import com.example.richardjiang.comotion.networkHandler.impl.InternalMessage;
 import com.example.richardjiang.comotion.networkHandler.impl.NetworkMessageObject;
+import com.example.richardjiang.comotion.remoteSensorHandler.DataStorageService;
 import com.example.richardjiang.comotion.remoteSensorHandler.Utils;
 import com.example.richardjiang.comotion.remoteSensorHandler.WearPatternActivity;
 import com.example.richardjiang.comotion.remoteSensorHandler.WearableMessageService;
 import com.example.richardjiang.comotion.shareHandler.ShareActivity;
+import com.example.richardjiang.comotion.shareHandler.UploadActivity;
 
 
 public class MainActivity extends NetworkActivityTemplate {
@@ -67,7 +69,6 @@ public class MainActivity extends NetworkActivityTemplate {
         btnHelp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 /*
                 new AlertDialog.Builder(context)
                         //.setMessage(R.string.intro_message)
@@ -91,10 +92,6 @@ public class MainActivity extends NetworkActivityTemplate {
                 }catch(Exception e){
                     ApplicationHelper.showToastMessage("Failed to send: test network handler");
                 }
-
-
-
-
             }
         });
 
@@ -111,6 +108,11 @@ public class MainActivity extends NetworkActivityTemplate {
         btnStartWatch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //android wear storage service to start
+                Intent intent_wear_storage = new Intent(ApplicationHelper.getActivityInstance(), DataStorageService.class);
+                startService(intent_wear_storage);
+
                 Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
                 intent.putExtra(Utils.STORE_COMMAND, Utils.START_MEASUREMENT);
                 startService(intent);
@@ -124,6 +126,10 @@ public class MainActivity extends NetworkActivityTemplate {
                 Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearableMessageService.class);
                 intent.putExtra(Utils.STORE_COMMAND, Utils.STOP_MEASUREMENT);
                 startService(intent);
+
+                //android wear storage service to stop
+                Intent intent_wear_storage_stop = new Intent(ApplicationHelper.getActivityInstance(), DataStorageService.class);
+                stopService(intent_wear_storage_stop);
             }
         });
 
@@ -140,7 +146,8 @@ public class MainActivity extends NetworkActivityTemplate {
         btnShare.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), ShareActivity.class);
+                //Intent intent = new Intent(ApplicationHelper.getActivityInstance(), ShareActivity.class);
+                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), UploadActivity.class);
                 startActivity(intent);
             }
         });
