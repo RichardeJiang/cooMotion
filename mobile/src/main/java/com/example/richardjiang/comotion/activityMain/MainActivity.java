@@ -25,6 +25,7 @@ import com.example.richardjiang.comotion.networkHandler.impl.NetworkMessageObjec
 import com.example.richardjiang.comotion.remoteSensorHandler.Utils;
 import com.example.richardjiang.comotion.remoteSensorHandler.WearPatternActivity;
 import com.example.richardjiang.comotion.remoteSensorHandler.WearableMessageService;
+import com.example.richardjiang.comotion.shareHandler.ShareActivity;
 
 
 public class MainActivity extends NetworkActivityTemplate {
@@ -131,6 +132,15 @@ public class MainActivity extends NetworkActivityTemplate {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ApplicationHelper.getActivityInstance(), WearPatternActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnShare = (Button) findViewById(R.id.btnShare);
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ApplicationHelper.getActivityInstance(), ShareActivity.class);
                 startActivity(intent);
             }
         });

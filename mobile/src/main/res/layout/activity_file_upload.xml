@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/windowBackground"
+    android:layout_gravity="center">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar" />
+
+    <TextView
+        android:layout_centerInParent="true"
+        android:layout_width="100dp"
+
+        android:id="@+id/textView2"
+        android:layout_height="50dp"
+        android:text=" "
+        android:layout_gravity="center_horizontal"
+        ></TextView>
+
+
+    <Button
+        android:id="@+id/btnVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/driver"
+        android:layout_gravity="center_horizontal"
+        android:text="Upload Videos"/>
+
+    <TextView
+        android:layout_centerInParent="true"
+        android:layout_width="100dp"
+
+        android:id="@+id/textView1"
+        android:layout_height="30dp"
+        android:text=" "
+        android:layout_gravity="center_horizontal"
+        ></TextView>
+
+    <Button
+        android:id="@+id/btnWatch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/driver"
+        android:layout_gravity="center_horizontal"
+        android:text="Upload Watch Data"/>
+
+</LinearLayout>
