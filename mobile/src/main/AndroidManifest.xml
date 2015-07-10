@@ -10,6 +10,7 @@
 
     <uses-feature android:name="com.android.hardware.camera2.full"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
@@ -44,12 +45,8 @@
 
         <activity android:name=".remoteSensorHandler.WearPatternActivity" />
 
-        <!--
-        <activity android:name=".cameraTest.cameraTestActivity" />
-
-        <activity android:name=".cameraTest2.CameraTestActivity2" />
-        -->
-
+        <activity android:name=".shareHandler.ShareActivity" />
+        <activity android:name=".shareHandler.FileDialog" />
 
         <service android:name=".remoteSensorHandler.WearableMessageService" >
         </service>

@@ -25,7 +25,8 @@ public class FileDialog extends Activity {
     //private File mPath = new File(Environment.getExternalStorageDirectory() + "//yourdir//");
     private File mPath;
     private String mChosenFile;
-    private static final String FTYPE = ".txt";
+    //private static final String FTYPE = ".txt";
+    private static String FTYPE;
     private static final int DIALOG_LOAD_FILE = 1000;
     private static final int REQUEST_CODE_CHOOSE_FILE = 1;
 
@@ -39,15 +40,11 @@ public class FileDialog extends Activity {
             @Override
             public void onClick(View v) {
                 mPath = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES) + "/CoMotion");
+                        Environment.DIRECTORY_PICTURES) + File.separator + "CoMotion");
+                FTYPE = ".mp4";
 
+                loadFileList();
                 showFileChoosingDialog();
-
-                Intent intent = new Intent();
-                intent.putExtra("MESSAGE", mChosenFile);
-                setResult(REQUEST_CODE_CHOOSE_FILE, intent);
-                finish();
-
 
             }
         });
@@ -57,29 +54,46 @@ public class FileDialog extends Activity {
             @Override
             public void onClick(View v) {
                 mPath = new File(Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_DOCUMENTS) + "/CoMotion");
+                        Environment.DIRECTORY_DOCUMENTS) + File.separator + "CoMotion");
+                FTYPE = ".txt";
+
+                loadFileList();
 
                 showFileChoosingDialog();
 
             }
         });
 
-
     }
 
     private void showFileChoosingDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog alertDialog;
 
+        builder.setTitle("Choose your file");
 
-        builder
-                .setCancelable(false)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //mChosenFile;
-                            }
-                        });
+        if(mFileList == null) {
+            Log.d(TAG, "no file list initialized");
+            alertDialog = builder.create();
+            return;
+        }
+        else {
+            builder.setItems(mFileList, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    mChosenFile = mPath + File.separator + mFileList[which];
+                    //you can do stuff with the file here too
+                    Intent intent = new Intent();
+                    intent.putExtra("MESSAGE", mChosenFile);
+                    intent.putExtra("MIMEType", FTYPE);
+                    setResult(REQUEST_CODE_CHOOSE_FILE, intent);
+                    finish();
+                }
+            });
+
+            alertDialog = builder.create();
+            alertDialog.show();
+        }
+
     }
 
     private void loadFileList() {
@@ -104,31 +118,6 @@ public class FileDialog extends Activity {
         else {
             mFileList= new String[0];
         }
-    }
-
-    @Override
-    protected Dialog onCreateDialog(int id) {
-        Dialog dialog = null;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        switch(id) {
-            case DIALOG_LOAD_FILE:
-                builder.setTitle("Choose your file");
-                if(mFileList == null) {
-                    Log.e(TAG, "Showing file picker before loading the file list");
-                    dialog = builder.create();
-                    return dialog;
-                }
-                builder.setItems(mFileList, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        mChosenFile = mFileList[which];
-                        //you can do stuff with the file here too
-                    }
-                });
-                break;
-        }
-        dialog = builder.show();
-        return dialog;
     }
 
 }
