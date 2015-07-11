@@ -45,11 +45,6 @@
 
         <activity android:name=".remoteSensorHandler.WearPatternActivity" />
 
-        <!--
-
-        <activity android:name=".shareHandler.ShareActivity" />
-        <activity android:name=".shareHandler.FileDialog" />
-        -->
         <activity android:name=".shareHandler.UploadActivity" />
 
         <service android:name=".remoteSensorHandler.WearableMessageService" >
@@ -66,13 +61,6 @@
             </intent-filter>
         </service>
         <!---->
-        <!--
-        <service android:name=".remoteSensorHandler.DataStorageServiceSample" >
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
-            </intent-filter>
-        </service>
-        -->
 
     </application>
 

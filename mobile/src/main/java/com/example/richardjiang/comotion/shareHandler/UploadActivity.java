@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.richardjiang.comotion.R;
 import com.example.richardjiang.comotion.activityMain.ApplicationHelper;
@@ -35,7 +36,7 @@ import java.io.OutputStream;
 public class UploadActivity extends Activity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private static final String TAG = "ShareActivity";
+    private static final String TAG = "UploadActivity";
     private GoogleApiClient mGoogleApiClient;
     private static final int REQUEST_CODE_CHOOSE_FILE = 1;
     private static final int REQUEST_CODE_CREATOR = 2;
@@ -126,8 +127,14 @@ public class UploadActivity extends Activity implements GoogleApiClient.Connecti
                             Environment.DIRECTORY_PICTURES) + File.separator + "CoMotion");
                     FTYPE = ".mp4";
 
-                    loadFileList();
-                    showFileChoosingDialog();
+                    if(mPath.exists()) {
+                        loadFileList();
+                        showFileChoosingDialog();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "No file to upload.",
+                                Toast.LENGTH_LONG).show();
+                    }
 
                 }
             });
@@ -140,9 +147,15 @@ public class UploadActivity extends Activity implements GoogleApiClient.Connecti
                             Environment.DIRECTORY_DOCUMENTS) + File.separator + "CoMotion");
                     FTYPE = ".txt";
 
-                    loadFileList();
-                    showFileChoosingDialog();
-
+                    if(mPath.exists()) {
+                        loadFileList();
+                        showFileChoosingDialog();
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "No file to upload.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    
                 }
             });
         }
