@@ -155,7 +155,7 @@ public class UploadActivity extends Activity implements GoogleApiClient.Connecti
                         Toast.makeText(getApplicationContext(), "No file to upload.",
                                 Toast.LENGTH_LONG).show();
                     }
-                    
+
                 }
             });
         }
@@ -220,10 +220,24 @@ public class UploadActivity extends Activity implements GoogleApiClient.Connecti
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             byte[] buf = new byte[1024];
                             int n;
+
+                            /**/
                             while (-1 != (n = fis.read(buf)))
                                 baos.write(buf, 0, n);
                             byte[] photoBytes = baos.toByteArray();
                             outputStream.write(photoBytes);
+                            /**/
+
+                            /*
+                            //try this:
+                            while(-1 != (n = fis.read(buf))) {
+                                baos.write(buf, 0, n);
+                                byte[] tempBytes = baos.toByteArray();
+                                outputStream.write(tempBytes);
+                                baos.flush();
+                                outputStream.flush();
+                            }
+                            */
 
                             outputStream.close();
                             outputStream = null;
@@ -235,6 +249,7 @@ public class UploadActivity extends Activity implements GoogleApiClient.Connecti
                         } catch (IOException e1) {
                             Log.w(TAG, "Unable to write file contents." + e1.getMessage());
                         }
+
 
                         String title = fileToSave.getName();
 
