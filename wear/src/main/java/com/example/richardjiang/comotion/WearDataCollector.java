@@ -157,6 +157,9 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         Log.d(TAG, "sendSensorData");
 
+        //Notice: sensorType may not be used now, but may be useful for the following developement
+        //by specifying different sensor types
+
         //String timeStamp_1 = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 
         //for debugging purpose

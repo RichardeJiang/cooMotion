@@ -108,6 +108,9 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
     //Button to start group recording
     private Button mGroupVideo;
 
+    //help messages for the image button
+    private static String CAMERA_HELP_MESSAGES = "Record Single will record videos only on this device. " + "\n" +
+            "Record Group will broadcast \"record video\" message to all connected devices.";
 
     /**
      * A refernce to the opened {@link android.hardware.camera2.CameraDevice}.
@@ -485,7 +488,8 @@ public class CameraFragment extends Fragment implements View.OnClickListener {
                 if (null != activity) {
                     new AlertDialog.Builder(activity)
                             //.setMessage(R.string.intro_message)
-                            .setMessage("@string/camera_help")
+                            //.setMessage("@string/camera_help")
+                            .setMessage(CAMERA_HELP_MESSAGES)
                             .setPositiveButton(android.R.string.ok, null)
                             .show();
                 }

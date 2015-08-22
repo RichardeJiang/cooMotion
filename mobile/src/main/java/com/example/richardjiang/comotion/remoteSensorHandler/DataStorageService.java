@@ -62,7 +62,7 @@ public class DataStorageService extends WearableListenerService {
         }
 
         String timeStamp_1 = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        long timeStamp = System.currentTimeMillis();
+        //long timeStamp = System.currentTimeMillis();
         file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp_1+".txt");
 
         /*
@@ -158,6 +158,7 @@ public class DataStorageService extends WearableListenerService {
             //writer.write(dataJSON);
             writer.write(dataToWrite);
             writer.close();
+            stream.close();
 
         } catch (Exception e) {
             Log.d(TAG, "Error Saving");
