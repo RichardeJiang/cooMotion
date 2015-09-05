@@ -39,6 +39,11 @@ public class DataStorageService extends WearableListenerService {
     //private SharedPreferences preferences;
     private File directory;
     private File file;
+    private File file_Acc;
+    private File file_Gyro;
+    private File file_RotaVec;
+    private File file_MagneFie;
+    private int noOfSensors = 4;
     //private FileOutputStream stream;
     //private OutputStreamWriter writer;
 
@@ -64,6 +69,10 @@ public class DataStorageService extends WearableListenerService {
         String timeStamp_1 = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         //long timeStamp = System.currentTimeMillis();
         file = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp_1+".txt");
+        file_Acc = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp_1+"_Acc"+".txt");
+        file_Gyro = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp_1+"_Gyr"+".txt");
+        file_RotaVec = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp_1+"_Rot"+".txt");
+        file_MagneFie = new File(directory.getPath()+File.separator+"wearable_data_"+timeStamp_1+"_Mag"+".txt");
 
         /*
         try {
@@ -150,15 +159,18 @@ public class DataStorageService extends WearableListenerService {
 
         String dataJSON = dataMapAsJSONObject(data).toString() + "\n";
 
-        String dataToWrite = processStringForAcc(dataJSON);
+        //this is for test
+        //String dataToWrite = processStringForAcc(dataJSON);
 
         try {
+
             FileOutputStream stream = new FileOutputStream(file, true);
             OutputStreamWriter writer = new OutputStreamWriter(stream);
-            //writer.write(dataJSON);
-            writer.write(dataToWrite);
+            writer.write(dataJSON);
+            //writer.write(dataToWrite);
             writer.close();
             stream.close();
+
 
         } catch (Exception e) {
             Log.d(TAG, "Error Saving");
@@ -181,6 +193,22 @@ public class DataStorageService extends WearableListenerService {
         super.onDestroy();
 
 
+    }
+
+    private String[] processString(String rawString) {
+        String[] result = new String[2];
+        String temp1,temp2;
+
+        try{
+            String[] temp;
+            temp = rawString.split(",");
+        } catch (Exception e) {
+            Log.d(TAG, "Incomplete processing");
+        }
+
+
+
+        return result;
     }
 
     //process the string before storing for direct input to Excel

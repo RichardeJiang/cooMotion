@@ -11,6 +11,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.util.Log;
+import android.util.SparseLongArray;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.MessageEvent;
@@ -31,19 +32,30 @@ import java.util.concurrent.Executors;
 public class WearDataCollector extends WearableListenerService implements SensorEventListener {
     private static final String TAG = "WearDataCollector";
 
-    private static final int TRANSMISSION_GAP = 20;
+    private static final int TRANSMISSION_GAP = 100;
     //  1000/transmission_gap is the frequency of the collection service
 
+    //sensor name list
     private final static int SENS_LINEAR_ACCELERATION = Sensor.TYPE_LINEAR_ACCELERATION;
+    private final static int SENS_GYROSCOPE = Sensor.TYPE_GYROSCOPE;
+    private final static int SENS_ROTATION_VECTOR = Sensor.TYPE_ROTATION_VECTOR;
+    private final static int SENS_MAGNETIC_FIELD = Sensor.TYPE_MAGNETIC_FIELD;
 
     private static long currentTimeStamp;
     private static long prevTimeStamp = System.currentTimeMillis();
+
+    private SparseLongArray lastSensorData;
 
     private PutDataMapRequest mSensorData;
     private GoogleApiClient mGoogleApiClient;
     private ExecutorService mExecutorService;
     private SensorManager mSensorManager;
+
+    //sensor list
     private Sensor mSensor_LinearAcc;
+    private Sensor mSensor_Gyroscope;
+    private Sensor mSensor_RotationVec;
+    private Sensor mSensor_MagneticField;
 
     @Override
     public void onCreate() {
@@ -57,6 +69,8 @@ public class WearDataCollector extends WearableListenerService implements Sensor
         mExecutorService = Executors.newCachedThreadPool();
         mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
+        lastSensorData = new SparseLongArray();
+
         System.out.println("INSIDE THE WEAR DATA COLLECTION METHOD!");
 
     }
@@ -69,14 +83,28 @@ public class WearDataCollector extends WearableListenerService implements Sensor
     @Override
     public void onSensorChanged(final SensorEvent event) {
 
-        //for now the collector will only collect data for linear-accelerometer
+        //ignore this part since we are now collecting multiple sensor data
+        /*
         if(event.sensor.getType() != SENS_LINEAR_ACCELERATION) {
             return;
         }
+        */
+        currentTimeStamp = System.currentTimeMillis();
+
+        long lastTimestamp = lastSensorData.get(event.sensor.getType());
+        long timeAgo = currentTimeStamp - lastTimestamp;
+
+        if (lastTimestamp != 0) {
+            if (timeAgo < 100) {
+                return;
+            }
+        }
+
+        lastSensorData.put(event.sensor.getType(), currentTimeStamp);
 
         //IMPORTANT: TEST WHETHER THIS TIME CHECK SHOULD BE HERE OR IN SENDSENSORDATA
         //BASED ON RETURN WILL RETURN TO WHAT?
-        currentTimeStamp = System.currentTimeMillis();
+        /*
         long timeGap = currentTimeStamp - prevTimeStamp;
 
         if(prevTimeStamp != 0) {
@@ -84,6 +112,7 @@ public class WearDataCollector extends WearableListenerService implements Sensor
                 return;
             }
         }
+        */
 
         prevTimeStamp = currentTimeStamp;
 
@@ -95,7 +124,7 @@ public class WearDataCollector extends WearableListenerService implements Sensor
                 //long timeStamp_2 = Integer.valueOf(tempTimeStamp);
                 //sendSensorData(event.sensor.getType(), event.accuracy, event.timestamp, event.values);
                 //sendSensorData(event.sensor.getType(), event.accuracy, timeStamp_2, event.values);
-                sendSensorData(event.sensor.getType(), event.accuracy, currentTimeStamp, event.values);
+                sendSensorData(event.sensor.getName(), event.sensor.getType(), currentTimeStamp, event.values);
             }
         });
 
@@ -153,7 +182,7 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
     }
 
-    private void sendSensorData(int sensorType, int accuracy, long timeStamp, float[] values) {
+    private void sendSensorData(String sensorName, int sensorType, long timeStamp, float[] values) {
 
         Log.d(TAG, "sendSensorData");
 
@@ -166,9 +195,10 @@ public class WearDataCollector extends WearableListenerService implements Sensor
         System.out.println("INSIDE THE SENDING METHOD");
 
         mSensorData = PutDataMapRequest.create(Utils.SENSOR_DATA_PATH);
+        mSensorData.getDataMap().putString(Utils.NAME, sensorName);
+        //mSensorData.getDataMap().putInt(Utils.TYPE, sensorType);
         mSensorData.getDataMap().putLong(Utils.TIMESTAMP, timeStamp);
         //mSensorData.getDataMap().putString(Utils.TIMESTAMP, timeStamp_1);    //put in the absolute time
-        mSensorData.getDataMap().putInt(Utils.ACCURACY, accuracy);
         mSensorData.getDataMap().putFloatArray(Utils.VALUES, values);
 
         PutDataRequest putDataRequest = mSensorData.asPutDataRequest();
@@ -192,7 +222,13 @@ public class WearDataCollector extends WearableListenerService implements Sensor
 
         startForeground(1, builder.build());
 
+        //initialization of sensors
         mSensor_LinearAcc = mSensorManager.getDefaultSensor(SENS_LINEAR_ACCELERATION);
+        mSensor_Gyroscope = mSensorManager.getDefaultSensor(SENS_GYROSCOPE);
+        mSensor_RotationVec = mSensorManager.getDefaultSensor(SENS_ROTATION_VECTOR);
+        mSensor_MagneticField = mSensorManager.getDefaultSensor(SENS_MAGNETIC_FIELD);
+
+
         //float[] empty = new float[0];
         if(mSensorManager != null) {
             if(mSensor_LinearAcc != null) {
@@ -200,6 +236,26 @@ public class WearDataCollector extends WearableListenerService implements Sensor
             } else {
                 Log.d(TAG, "No Linear Acceleration Sensor found");
             }
+
+            if(mSensor_Gyroscope != null) {
+                mSensorManager.registerListener(this, mSensor_Gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
+            } else {
+                Log.d(TAG, "No Gyroscope Sensor found");
+            }
+
+            if(mSensor_RotationVec != null) {
+                mSensorManager.registerListener(this, mSensor_RotationVec, SensorManager.SENSOR_DELAY_NORMAL);
+            } else {
+                Log.d(TAG, "No Rotation Vector Sensor found");
+            }
+
+            if(mSensor_MagneticField != null) {
+                mSensorManager.registerListener(this, mSensor_MagneticField, SensorManager.SENSOR_DELAY_NORMAL);
+            } else {
+                Log.d(TAG, "No Magnetic Field Sensor found");
+            }
+
+
         }
 
         //similar to the above comments
