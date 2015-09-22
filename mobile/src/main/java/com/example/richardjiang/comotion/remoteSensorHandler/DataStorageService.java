@@ -161,13 +161,32 @@ public class DataStorageService extends WearableListenerService {
 
         //this is for test
         //String dataToWrite = processStringForAcc(dataJSON);
+        String processedData = processString(dataJSON);
+
+        FileOutputStream stream;
 
         try {
+            if (processedData.charAt(0) == '1') {
+                stream = new FileOutputStream(file_Acc);
+            }
+            else if (processedData.charAt(0) == '2') {
+                stream = new FileOutputStream(file_Gyro);
+            }
+            else if (processedData.charAt(0) == '3') {
+                stream = new FileOutputStream(file_MagneFie);
+            }
+            else {
+                stream = new FileOutputStream(file_RotaVec);
+            }
 
-            FileOutputStream stream = new FileOutputStream(file, true);
+            int tempLength = processedData.length();
+            processedData = processedData.substring(1,tempLength);
+
+            //FileOutputStream stream = new FileOutputStream(file, true);
             OutputStreamWriter writer = new OutputStreamWriter(stream);
-            writer.write(dataJSON);
+            //writer.write(dataJSON);
             //writer.write(dataToWrite);
+            writer.write(processedData);
             writer.close();
             stream.close();
 
@@ -195,13 +214,32 @@ public class DataStorageService extends WearableListenerService {
 
     }
 
-    private String[] processString(String rawString) {
-        String[] result = new String[2];
+    private String processString(String rawString) {
+        String result = new String();
         String temp1,temp2;
+
+        if (rawString.contains("Acceleration")) {
+            result = "1";
+        }
+        else if (rawString.contains("gyroscope")) {
+            result = "2";
+        }
+        else if (rawString.contains("magnetic")) {
+            result = "3";
+        }
+        else {
+            result = "4";
+        }
 
         try{
             String[] temp;
-            temp = rawString.split(",");
+            temp = rawString.split("\\[");
+            temp1 = temp[1].split("\\]")[0];
+            temp2 = temp[1].split(":")[2];
+            temp2 = temp2.substring(0, temp2.length() - 1);
+
+            result = result + temp1 + temp2;
+
         } catch (Exception e) {
             Log.d(TAG, "Incomplete processing");
         }
